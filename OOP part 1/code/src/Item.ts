@@ -8,8 +8,7 @@ export abstract class Item implements Comparable<Item> {
     name:string;
     weight:number; 
     abstract use():void;
-    constructor(name:string,value:number,weight:number)
-    {
+    constructor(name:string,value:number,weight:number) {
         this.id = id;
         this.name = name;
         this.value = value;
@@ -18,60 +17,56 @@ export abstract class Item implements Comparable<Item> {
         counter++;
     }
 
-    static numberOfItems() : number
-    {
+    static numberOfItems() : number {
         return counter;
     }
 
     public compareTo(other: Item): number {
-        if(this.value > other.value) return 1;
-        if(this.value < other.value) return -1;
-        if(this.name > other.name) return 1;
+        if(this.value > other.value) { 
+            return 1;
+        }
+        if(this.value < other.value) { 
+            return -1;
+        }
+        if(this.name > other.name) { 
+            return 1;
+        }
         return -1;
     }
 
-    toString() : string
-    {
+    toString() : string {
         return `${this.name} - Value: ${this.value}, Weight: ${this.weight}`;
     }
 
-    reset() : void
-    {
+    reset() : void {
         counter = 0;
     }
 
-    getId() : number
-    {
+    getId() : number {
         return this.id;
     }
 
-    setValue(price)
-    {   
+    setValue(price) {   
         this.value = price;
     }
 
-    getValue()
-    {
+    getValue() {
         return this.value;
     }
 
-    setName(name)
-    {
+    setName(name) {
         this.name = name;
     }
 
-    getName()
-    {
+    getName() {
         return this.name;
     }
 
-    setWeight(weight)
-    {
+    setWeight(weight) {
         this.weight = weight;
     }
 
-    getWeight()
-    {
+    getWeight() {
         return this.weight;
     }
 

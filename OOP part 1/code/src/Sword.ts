@@ -6,11 +6,14 @@ export class  Sword extends Weapon {
         super(swordName,baseDamage,baseDurability,value,weight);
     }
 
-    polish() : void
-    {
+    polish() : void {
         let maxPolish = this.baseDamage%25;
         let tempDamageModifier = this.MODIFIER_CHANGE_RATE + this.damageModifier;
-        if(tempDamageModifier > maxPolish) this.damageModifier = maxPolish;
-        else this.damageModifier = tempDamageModifier;
+        if(tempDamageModifier > maxPolish) {
+            this.damageModifier = maxPolish;
+        }
+        else {
+            this.damageModifier = tempDamageModifier;
+        }
     }
 }
