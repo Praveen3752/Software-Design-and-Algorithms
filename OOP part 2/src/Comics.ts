@@ -1,7 +1,7 @@
 import { Item } from "./Item";
 import { Pages } from "./Pages";
 
-export class Comics extends Item{
+export class Comics extends Item {
     pages!: Pages;
     title !: string;
     author !: string;

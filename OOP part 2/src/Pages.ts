@@ -1,15 +1,12 @@
 import { Page } from "./Page";
 
-export class Pages
-{
-    pages : Page[] = [];
-    constructor(pages : Page[])
-    {
+export class Pages {
+    pages: Page[] = [];
+    constructor(pages: Page[]) {
         this.pages = pages;
     }
 
-    get length()
-    {
+    get length() {
         return this.pages.length;
     }
 }
