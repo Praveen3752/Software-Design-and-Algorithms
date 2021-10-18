@@ -1,0 +1,12 @@
+import { Shipment } from "./Shipment";
+
+export class ReturnReceiptDecorator implements Shipment {
+    shipmentInstance: Shipment;
+    constructor(instance: Shipment) {
+        this.shipmentInstance = instance;
+    }
+    ship(): string {
+        return this.shipmentInstance.ship() + "**MARK RETURN RECEIPT REQUESTED**";
+    }
+
+}
