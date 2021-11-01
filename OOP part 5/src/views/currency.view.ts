@@ -12,23 +12,19 @@ export class CurrencyView {
     this.app.setAttribute("style", "background:#3b3b3bc7");
     this.form = this.createElement('div');
 
-    let section1 = document.createElement('fieldset');
-    section1.setAttribute('style', 'margin:1.5%');
-    let legend1 = document.createElement('legend');
-    legend1.textContent = 'Rupees';
-    section1.append(legend1, this.getFirstDiv('Rupees', 'rupeeConversion'), this.getSecondDiv('Euro', 'Rupees'), this.getThirdDiv('EuroToRupees', 'RupeesToEuro'));
-
-    let section2 = document.createElement('fieldset');
-    section2.setAttribute('style', 'margin:1.5%');
-    let legend2 = document.createElement('legend');
-    legend2.textContent = 'Dollar';
-    section2.append(legend2, this.getFirstDiv('Dollar', 'dollarConversion'), this.getSecondDiv('Euro', 'Dollar'), this.getThirdDiv('EuroToDollar', 'DollarToEuro'));
+    let section1 = this.getSection1();
+    let section2 = this.getSection2();
 
     this.form.append(this.getButtons(), this.getRadioButtons(), section1, section2);
 
     this.app.append(this.form);
     this.app.before(h1tag);
 
+    this.callAllEventListeners();
+
+  }
+
+  callAllEventListeners() {
     document.querySelectorAll(".fromCurrency").forEach(box =>
       box.addEventListener("change", (event) => this.changeToCurrencyValue(event))
     )
@@ -67,17 +63,28 @@ export class CurrencyView {
 
   }
 
+  getSection1() {
+    let section1 = document.createElement('fieldset');
+    section1.setAttribute('style', 'margin:1.5%');
+    let legend1 = document.createElement('legend');
+    legend1.textContent = 'Rupees';
+    section1.append(legend1, this.getFirstDiv('Rupees', 'rupeeConversion'), this.getSecondDiv('Euro', 'Rupees'), this.getThirdDiv('EuroToRupees', 'RupeesToEuro'));
+    return section1;
+  }
+
+  getSection2() {
+    let section2 = document.createElement('fieldset');
+    section2.setAttribute('style', 'margin:1.5%');
+    let legend2 = document.createElement('legend');
+    legend2.textContent = 'Dollar';
+    section2.append(legend2, this.getFirstDiv('Dollar', 'dollarConversion'), this.getSecondDiv('Euro', 'Dollar'), this.getThirdDiv('EuroToDollar', 'DollarToEuro'));
+    return section2;
+  }
+
   changeToCurrencyValue(event) {
-    let fromData = document.querySelectorAll(".fromCurrency");
-    let toData = document.querySelectorAll(".toCurrency");
-    let euroToRupeesData = fetch(`../rupeeConversion.json`, {}).then(response => response.json());
-    let euroToDollarsData = fetch(`../dollarConversion.json`, {}).then(response => response.json());
-    if (event.target.attributes[2].value == 'EuroToRupees') {
-      euroToRupeesData.then(res => { event.target.nextSibling.value = event.target.value * res['Rupees'] });
-    }
-    else {
-      euroToDollarsData.then(res => { event.target.nextSibling.value = event.target.value * res['Dollar'] });
-    }
+    let { fromData, toData } = this.getQuery();
+    let { euroToRupeesData, euroToDollarsData } = this.fetchConversionData();
+    this.changeValueInFields(event, 'EuroToRupees', 'Rupees', 'Dollar');
     if ((document.querySelector('input[name="mode"]:checked') as HTMLInputElement).value == 'ModeB') return;
     fromData.forEach((ele) => {
       ele.setAttribute('value', event.target.value);
@@ -89,17 +96,9 @@ export class CurrencyView {
   }
 
   toCurrencyValue(event) {
-    console.log(event);
-    let fromData = document.querySelectorAll(".fromCurrency");
-    let toData = document.querySelectorAll(".toCurrency");
-    let euroToRupeesData = fetch(`../rupeeConversion.json`, {}).then(response => response.json());
-    let euroToDollarsData = fetch(`../dollarConversion.json`, {}).then(response => response.json());
-    if (event.target.attributes[2].value == 'RupeesToEuro') {
-      euroToRupeesData.then(res => { event.target.previousSibling.value = event.target.value * res['euro'] });
-    }
-    else {
-      euroToDollarsData.then(res => { event.target.previousSibling.value = event.target.value * res['euro'] });
-    }
+    let { fromData, toData } = this.getQuery();
+    let { euroToRupeesData, euroToDollarsData } = this.fetchConversionData();
+    this.changeValueInFields(event, 'RupeesToEuro', 'euro', 'euro');
     if ((document.querySelector('input[name="mode"]:checked') as HTMLInputElement).value == 'ModeB') return;
     toData.forEach((ele) => {
       ele.setAttribute('value', event.target.value);
@@ -109,32 +108,51 @@ export class CurrencyView {
     euroToDollarsData.then(res => { fromData[1].setAttribute('value', String(event.target.value * res['euro'])); });
   }
 
+  getQuery() {
+    let fromData = document.querySelectorAll(".fromCurrency");
+    let toData = document.querySelectorAll(".toCurrency");
+    return { fromData, toData };
+  }
+
+  changeValueInFields(event, checkCondition, param1, param2) {
+    let { euroToRupeesData, euroToDollarsData } = this.fetchConversionData();
+    if (event.target.attributes[2].value == checkCondition) {
+      euroToRupeesData.then(res => { event.target.previousSibling.value = event.target.value * res[param1] });
+    }
+    else {
+      euroToDollarsData.then(res => { event.target.previousSibling.value = event.target.value * res[param2] });
+    }
+  }
+
+  fetchConversionData() {
+    let euroToRupeesData = fetch(`../rupeeConversion.json`, {}).then(response => response.json());
+    let euroToDollarsData = fetch(`../dollarConversion.json`, {}).then(response => response.json());
+    return { euroToRupeesData, euroToDollarsData };
+  }
+
   getButtons() {
-    let inputButton = document.createElement('button');
-    inputButton.textContent = 'Input Fields';
-    inputButton.setAttribute('id', 'inputData');
-    let rangeButton = document.createElement('button');
-    rangeButton.textContent = 'Range';
-    rangeButton.setAttribute('id', 'rangeData');
+    let inputButton = this.createButton('Input Fields', 'inputData');
+    let rangeButton = this.createButton('Range', 'rangeData');
     let divElement = document.createElement('div');
     divElement.setAttribute("style", "display:flex;justify-content:space-evenly;align-items:center;padding:3%");
     divElement.append(inputButton, rangeButton);
     return divElement;
   }
 
+  createButton(text, id) {
+    let button = document.createElement('button');
+    button.textContent = text;
+    button.setAttribute('id', id);
+    return button;
+  }
+
   getRadioButtons() {
-    let radio1 = document.createElement('input');
-    radio1.setAttribute('type', 'radio');
-    radio1.setAttribute('name', 'mode');
-    radio1.setAttribute('value', 'ModeA');
+    let radio1 = this.createRadioButtons('mode', 'ModeA', 'true');
     radio1.setAttribute('checked', 'true');
     let label1 = document.createElement('label');
     label1.textContent = 'Mode A';
 
-    let radio2 = document.createElement('input');
-    radio2.setAttribute('type', 'radio');
-    radio2.setAttribute('name', 'mode');
-    radio2.setAttribute('value', 'ModeB');
+    let radio2 = this.createRadioButtons('mode', 'ModeB', false);
     let label2 = document.createElement('label');
     label2.textContent = 'Mode B';
 
@@ -142,6 +160,14 @@ export class CurrencyView {
     divElement.setAttribute("style", "display:flex;justify-content:space-evenly;align-items:center;padding:3%");
     divElement.append(radio1, label1, radio2, label2);
     return divElement;
+  }
+
+  createRadioButtons(name, value, checked) {
+    let radio = document.createElement('input');
+    radio.setAttribute('type', 'radio');
+    radio.setAttribute('name', name);
+    radio.setAttribute('value', value);
+    return radio;
   }
 
   getFirstDiv(currency, url) {
