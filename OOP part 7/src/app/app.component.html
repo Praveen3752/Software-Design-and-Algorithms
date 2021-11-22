@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <div>
+        <h2>Adjacency Matrix</h2>
+    <div class="divStyle">
+        <span>Enter the number of vertices : </span>
+        <input class="verticesField" id="verticesCount" type="number" />
+        <button (click)="submitVertices()" class="verticesBtn">Submit</button>
+    </div>
+    <div class="divStyle">
+        <span>From vertix : </span>
+        <select id="fromEdge"></select>
+        <span>To vertix : </span>
+        <select id="toEdge"></select>
+        <span>Weight : </span>
+        <input class="verticesField" id="weight" type="number" />
+        <button (click)="submitEdges()" class="verticesBtn">Submit</button>
+    </div>
+
+    <div class="divStyle">
+        <span>From vertix : </span>
+        <select id="fromPath"></select>
+        <span>To vertix : </span>
+        <select id="toPath"></select>
+        <button (click)="shortestPath()" class="verticesBtn">Shortest Path</button>
+    </div>
+
+    <div class="divStyle">
+      Shortest Path is <span id="shortestPathText"></span>
+    </div>
+
+    <div class="divStyle" id="adjacencyMatrixTable">
+
+    </div>
+</div>
+</body>
+
+</html>

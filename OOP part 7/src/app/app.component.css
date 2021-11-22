@@ -1,0 +1,52 @@
+body {
+    background-color: #474343e6;
+}
+
+.divStyle {
+    text-align: center;
+    width: 50%;
+    margin: auto;
+    margin-top: 6%;
+    display: flex;
+    justify-content: space-evenly;
+    color: white;
+}
+
+.verticesField {
+    border: none;
+    border-bottom: 2px solid black;
+    background: #706a6ade;
+    outline: none;
+    color: white;
+}
+
+.verticesBtn {
+    padding: 0.5% 1%;
+    background: #1ba61b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+select {
+    border: 2px solid black;
+    background: #706a6ade;
+    color: white;
+    border-radius: 3px;
+}
+
+table {
+    width: 100%;
+    padding: 1%;
+    border-radius: 8px;
+}
+
+table tr th {
+    background-color: #3b3b3b;
+}
+
+h2 {
+    color: darkgray;
+    text-align: center;
+}
